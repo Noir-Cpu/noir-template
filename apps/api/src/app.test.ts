@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { app } from "./app";
+import { normaliseAuth } from "./otel";
 
 describe("api", () => {
   it("reports health", async () => {
@@ -40,5 +41,16 @@ describe("tracing", () => {
     } finally {
       globalThis.fetch = realFetch;
     }
+  });
+});
+
+describe("normaliseAuth", () => {
+  it.each([
+    ["Basic abc", "Basic abc"],
+    ["abc", "Basic abc"],
+    ["Authorization=Basic abc", "Basic abc"],
+    ["  Authorization=Basic%20abc\n", "Basic abc"],
+  ])("%j -> %s", (raw, want) => {
+    expect(normaliseAuth(raw)).toBe(want);
   });
 });
