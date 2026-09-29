@@ -2,7 +2,10 @@
   "name": "noir-template",
   "private": true,
   "type": "module",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev:api": "npm run dev -w @noir/api",
     "dev:web": "npm run dev -w @noir/web",
@@ -12,5 +15,11 @@
   },
   "devDependencies": {
     "typescript": "^5.6.0"
+  },
+  "overrides": {
+    "undici": "^7.30.0",
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.0"
+    }
   }
 }
