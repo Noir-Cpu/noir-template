@@ -1,6 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource/ibm-plex-sans/400.css";
+import "@fontsource/ibm-plex-sans/600.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/instrument-serif/400.css";
 import "@noir/ui/tokens.css";
 import "./styles.css";
 import { initTelemetry } from "./telemetry";
