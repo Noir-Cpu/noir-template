@@ -18,6 +18,9 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run build -w @noir/web
+      - run: npm run migrate -w @noir/db
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_DIRECT }}
       - run: npx wrangler deploy
         working-directory: apps/api
         env:
