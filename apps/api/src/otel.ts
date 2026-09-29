@@ -16,6 +16,13 @@ export function parseTraceparent(header: string | undefined) {
   return m ? { traceId: m[1]!, parentSpanId: m[2]! } : null;
 }
 
+let warned = false;
+function warnOnce(msg: string) {
+  if (warned) return;
+  warned = true;
+  console.warn(JSON.stringify({ level: "warn", msg }));
+}
+
 const nano = (ms: number) => (BigInt(ms) * 1_000_000n).toString();
 
 type Span = {
@@ -61,13 +68,17 @@ async function exportSpan(env: OtelEnv, s: Span) {
     ],
   };
   try {
-    await fetch(`${env.GRAFANA_OTLP_ENDPOINT}/v1/traces`, {
+    const res = await fetch(`${env.GRAFANA_OTLP_ENDPOINT}/v1/traces`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: env.GRAFANA_OTLP_AUTH! },
       body: JSON.stringify(body),
     });
-  } catch {
-    // Telemetry must never break a request.
+    if (!res.ok) {
+      console.error(JSON.stringify({ level: "error", msg: "otlp export rejected", status: res.status, body: (await res.text()).slice(0, 200) }));
+    }
+  } catch (err) {
+    // Telemetry must never break a request, but failures must be visible.
+    console.error(JSON.stringify({ level: "error", msg: "otlp export failed", err: String(err) }));
   }
 }
 
@@ -94,7 +105,9 @@ export const tracing = (): MiddlewareHandler<{ Bindings: OtelEnv }> => async (c,
     );
 
     const env = c.env ?? {};
-    if (env.GRAFANA_OTLP_ENDPOINT && env.GRAFANA_OTLP_AUTH) {
+    if (!env.GRAFANA_OTLP_ENDPOINT || !env.GRAFANA_OTLP_AUTH) {
+      warnOnce("otlp disabled: GRAFANA_OTLP_ENDPOINT or GRAFANA_OTLP_AUTH not set on this Worker");
+    } else {
       const p = exportSpan(env, {
         traceId,
         spanId,
