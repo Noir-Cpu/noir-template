@@ -23,6 +23,12 @@ function warnOnce(msg: string) {
   console.warn(JSON.stringify({ level: "warn", msg }));
 }
 
+// Accepts "Basic abc", "abc", or "Authorization=Basic abc" (as pasted from Grafana), with stray whitespace.
+export function normaliseAuth(raw: string) {
+  const v = raw.trim().replace(/^authorization\s*=\s*/i, "").replace(/^"|"$/g, "").replace(/%20/g, " ").trim();
+  return /^basic\s/i.test(v) ? `Basic ${v.replace(/^basic\s+/i, "")}` : `Basic ${v}`;
+}
+
 const nano = (ms: number) => (BigInt(ms) * 1_000_000n).toString();
 
 type Span = {
@@ -68,9 +74,9 @@ async function exportSpan(env: OtelEnv, s: Span) {
     ],
   };
   try {
-    const res = await fetch(`${env.GRAFANA_OTLP_ENDPOINT}/v1/traces`, {
+    const res = await fetch(`${env.GRAFANA_OTLP_ENDPOINT!.trim().replace(/\/+$/, "")}/v1/traces`, {
       method: "POST",
-      headers: { "content-type": "application/json", authorization: env.GRAFANA_OTLP_AUTH! },
+      headers: { "content-type": "application/json", authorization: normaliseAuth(env.GRAFANA_OTLP_AUTH!) },
       body: JSON.stringify(body),
     });
     if (!res.ok) {
