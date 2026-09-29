@@ -3,10 +3,13 @@ import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { sql } from "drizzle-orm";
 import { createDb } from "@noir/db";
+import { tracing, type OtelEnv } from "./otel";
 
-export type Env = { DATABASE_URL: string };
+export type Env = { DATABASE_URL: string } & OtelEnv;
 
 export const app = new Hono<{ Bindings: Env }>().basePath("/api");
+
+app.use("*", tracing());
 
 app.get("/health", (c) => c.json({ ok: true }));
 
