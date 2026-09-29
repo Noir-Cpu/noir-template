@@ -6,6 +6,7 @@ import "./styles.css";
 import { initTelemetry } from "./telemetry";
 
 initTelemetry();
+import { Account } from "./Account";
 
 const client = new QueryClient();
 
@@ -24,6 +25,7 @@ createRoot(document.getElementById("root")!).render(
         <p className="meta">[ 000 ]</p>
         <h1>NOIR Template</h1>
         <Health />
+        <Account />
       </main>
     </QueryClientProvider>
   </StrictMode>,

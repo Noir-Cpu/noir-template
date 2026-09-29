@@ -54,3 +54,17 @@ describe("normaliseAuth", () => {
     expect(normaliseAuth(raw)).toBe(want);
   });
 });
+
+describe("auth", () => {
+  const env = { DATABASE_URL: "postgres://user:pass@localhost/db", BETTER_AUTH_SECRET: "test-secret-test-secret-test-secret-1234" };
+
+  it("serves the auth router", async () => {
+    const res = await app.request("/api/auth/ok", {}, env);
+    expect(res.status).toBe(200);
+  });
+
+  it("rejects /me without a session cookie", async () => {
+    const res = await app.request("/api/me", {}, env);
+    expect(res.status).toBe(401);
+  });
+});

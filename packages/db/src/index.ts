@@ -7,4 +7,5 @@ export function createDb(databaseUrl: string) {
   return drizzle(neon(databaseUrl), { schema });
 }
 
+export { schema };
 export * from "./schema";
