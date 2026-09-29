@@ -18,6 +18,10 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run build -w @noir/web
+        env:
+          VITE_SENTRY_DSN: ${{ vars.SENTRY_DSN_WEB }}
+          VITE_POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
       - run: npm run migrate -w @noir/db
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_DIRECT }}

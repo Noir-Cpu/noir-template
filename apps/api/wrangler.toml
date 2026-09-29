@@ -1,6 +1,7 @@
 name = "noir-template-api"
 main = "src/index.ts"
 compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
 
 # Static web build is served from the same Worker (Workers static assets, not Pages).
 [assets]
