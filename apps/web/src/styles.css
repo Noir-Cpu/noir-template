@@ -1,0 +1,4 @@
+body { margin: 0; background: var(--bone); color: var(--ink); font-family: system-ui, sans-serif; }
+main { padding: 2rem 16px; max-width: 60rem; margin: 0 auto; }
+h1 { font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; line-height: 0.9; font-size: clamp(2.5rem, 10vw, 6rem); }
+.meta { font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.08em; color: var(--graphite); }
