@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import "@noir/ui/tokens.css";
 import "./styles.css";
+import { initTelemetry } from "./telemetry";
+
+initTelemetry();
 
 const client = new QueryClient();
 

@@ -5,7 +5,7 @@ import { sql } from "drizzle-orm";
 import { createDb } from "@noir/db";
 import { tracing, type OtelEnv } from "./otel";
 
-export type Env = { DATABASE_URL: string } & OtelEnv;
+export type Env = { DATABASE_URL: string; SENTRY_DSN_API?: string } & OtelEnv;
 
 export const app = new Hono<{ Bindings: Env }>().basePath("/api");
 
