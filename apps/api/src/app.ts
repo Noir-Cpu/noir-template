@@ -4,8 +4,9 @@ import { zValidator } from "@hono/zod-validator";
 import { sql } from "drizzle-orm";
 import { createDb } from "@noir/db";
 import { tracing, type OtelEnv } from "./otel";
+import { createAuth, type AuthEnv } from "./auth";
 
-export type Env = { DATABASE_URL: string; SENTRY_DSN_API?: string } & OtelEnv;
+export type Env = AuthEnv & OtelEnv & { SENTRY_DSN_API?: string };
 
 export const app = new Hono<{ Bindings: Env }>().basePath("/api");
 
@@ -21,6 +22,13 @@ app.get("/health/db", async (c) => {
   } catch {
     return c.json({ ok: false }, 503);
   }
+});
+
+app.on(["GET", "POST"], "/auth/*", (c) => createAuth(c.env, c.req.url).handler(c.req.raw));
+
+app.get("/me", async (c) => {
+  const session = await createAuth(c.env, c.req.url).api.getSession({ headers: c.req.raw.headers });
+  return session ? c.json({ user: { id: session.user.id, name: session.user.name } }) : c.json({ user: null }, 401);
 });
 
 app.post(
