@@ -9,18 +9,18 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@better-auth/passkey": "^1.7.14",
+    "@better-auth/passkey": "^1.7.18",
     "@hono/zod-validator": "^0.9.1",
     "@noir/db": "*",
-    "@sentry/cloudflare": "^11.10.0",
+    "@sentry/cloudflare": "^11.11.0",
     "better-auth": "^1.7.6",
     "drizzle-orm": "^0.45.4",
-    "hono": "^4.13.14",
+    "hono": "^4.13.17",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241106.0",
-    "vitest": "^5.0.5",
-    "wrangler": "^4.156.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.158.0"
   }
 }
